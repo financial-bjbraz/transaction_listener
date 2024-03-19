@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty name="LOGSTASH_HOST" source="logstash.host"/>
+    <springProperty name="LOGGER_NAME" source="logger.name"/>
+    <springProperty scope="context" name="application_name" source="logger.name"/>
+
+    <appender name="jsonConsoleAppender" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>${LOGSTASH_HOST}</destination>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <version/>
+                <logLevel/>
+                <message/>
+                <loggerName/>
+                <threadName/>
+                <context/>
+                <pattern>
+                    <pattern>
+                        {
+                        "trace": {
+                        "trace_id": "%mdc{X-B3-TraceId}",
+                        "span_id": "%mdc{X-B3-SpanId}",
+                        "parent_span_id": "%mdc{X-B3-ParentSpanId}",
+                        "exportable": "%mdc{X-Span-Export}"
+                        }
+                        }
+                    </pattern>
+                </pattern>
+                <mdc>
+                    <excludeMdcKeyName>traceId</excludeMdcKeyName>
+                    <excludeMdcKeyName>spanId</excludeMdcKeyName>
+                    <excludeMdcKeyName>parentId</excludeMdcKeyName>
+                    <excludeMdcKeyName>spanExportable</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-B3-TraceId</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-B3-SpanId</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-B3-ParentSpanId</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-Span-Export</excludeMdcKeyName>
+                </mdc>
+                <stackTrace/>
+            </providers>
+        </encoder>
+    </appender>
+
+    <appender name="out-json" class="ch.qos.logback.core.FileAppender">
+        <file>/tmp/logs/tx_listener.log</file>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <fieldName>ts</fieldName>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <loggerName>
+                    <fieldName>logger</fieldName>
+                </loggerName>
+                <logLevel>
+                    <fieldName>severity</fieldName>
+                </logLevel>
+                <callerData>
+                    <classFieldName>class</classFieldName>
+                    <methodFieldName>method</methodFieldName>
+                    <lineFieldName>line</lineFieldName>
+                    <fileFieldName>file</fileFieldName>
+                </callerData>
+                <threadName>
+                    <fieldName>thread</fieldName>
+                </threadName>
+                <mdc/>
+                <arguments>
+                    <includeNonStructuredArguments>false</includeNonStructuredArguments>
+                </arguments>
+                <stackTrace>
+                    <fieldName>stack</fieldName>
+                </stackTrace>
+                <message>
+                    <fieldName>message</fieldName>
+                </message>
+            </providers>
+        </encoder>
+    </appender>
+
+    <!--    <appender name="FILEROLLING"-->
+    <!--              class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+    <!--        <append>true</append>-->
+    <!--        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
+    <!--            <fileNamePattern>rolling-%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
+    <!--            <maxFileSize>1024KB</maxFileSize>-->
+    <!--            <maxHistory>7</maxHistory>-->
+    <!--            <totalSizeCap>10GB</totalSizeCap>-->
+    <!--        </rollingPolicy>-->
+    <!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+    <!--            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>-->
+    <!--        </encoder>-->
+    <!--    </appender>-->
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <version/>
+                <logLevel/>
+                <message/>
+                <loggerName/>
+                <threadName/>
+                <context/>
+                <pattern>
+                    <pattern>
+                        {
+                        "trace": {
+                        "trace_id": "%mdc{X-B3-TraceId}",
+                        "span_id": "%mdc{X-B3-SpanId}",
+                        "parent_span_id": "%mdc{X-B3-ParentSpanId}",
+                        "exportable": "%mdc{X-Span-Export}"
+                        }
+                        }
+                    </pattern>
+                </pattern>
+                <mdc>
+                    <excludeMdcKeyName>traceId</excludeMdcKeyName>
+                    <excludeMdcKeyName>spanId</excludeMdcKeyName>
+                    <excludeMdcKeyName>parentId</excludeMdcKeyName>
+                    <excludeMdcKeyName>spanExportable</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-B3-TraceId</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-B3-SpanId</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-B3-ParentSpanId</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-Span-Export</excludeMdcKeyName>
+                </mdc>
+                <stackTrace/>
+            </providers>
+        </encoder>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="jsonConsoleAppender" />
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

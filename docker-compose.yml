@@ -1,0 +1,27 @@
+version: '1'
+
+services:
+  listener-rootstock:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8090:8090"
+    #    links:
+    #      - "db:redis"
+    #  db:
+    #    image: "redis:alpine"
+    #    hostname: localhost
+    #    ports:
+    #      - "6379:6379"
+    environment:
+      RABBIT_QUEUE_NAME: tx-creation
+      KEYCLOAK: http://192.168.15.6:8080/realms/security-api
+      #MONGODB_URI: 2wp-user:pwd@192.168.0.73:27017/admin
+      REDIS: 192.168.15.6
+      LOGSTASH: 192.168.15.6:5044
+      RABBIT_QUEUE_HOST: 192.168.15.6
+      RABBIT_QUEUE_PORT: 5672
+      RABBIT_QUEUE_USERNAME: admin
+      RABBIT_QUEUE_PASSWORD: admin

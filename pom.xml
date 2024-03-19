@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.2</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>br.com.bjbraz</groupId>
+	<artifactId>transaction_listener</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>transaction_listener</name>
+	<description>Listen transactions</description>
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.amqp</groupId>
+			<artifactId>spring-rabbit-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.web3j</groupId>
+			<artifactId>core</artifactId>
+			<version>5.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.logstash.logback</groupId>
+			<artifactId>logstash-logback-encoder</artifactId>
+			<version>5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.12.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.12.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.22</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.web3j</groupId>
+				<artifactId>web3j-maven-plugin</artifactId>
+				<version>4.5.11</version>
+				<configuration>
+					<packageName>br.com.bjbraz.tx.contracts</packageName>
+					<sourceDestination>src/main/java/generated</sourceDestination>
+					<nativeJavaType>true</nativeJavaType>
+					<outputFormat>java,bin</outputFormat>
+					<soliditySourceFiles>
+						<directory>src/main/resources</directory>
+						<includes>
+							<include>**/*.sol</include>
+						</includes>
+					</soliditySourceFiles>
+					<outputDirectory>
+						<java>src/java/generated</java>
+						<bin>src/bin/generated</bin>
+						<abi>src/abi/generated</abi>
+					</outputDirectory>
+					<contract>
+						<includes>
+							<include>greeter</include>
+						</includes>
+						<excludes>
+							<exclude>mortal</exclude>
+						</excludes>
+					</contract>
+					<pathPrefixes>
+						<pathPrefix>dep=../dependencies</pathPrefix>
+					</pathPrefixes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
