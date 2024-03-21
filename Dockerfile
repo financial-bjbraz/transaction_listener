@@ -1,5 +1,4 @@
 FROM maven:3.8.1-openjdk-17-slim as builder
-MAINTAINER BJBraz Developer Team
 COPY ./pom.xml /tmp
 COPY src/ /tmp/src/
 WORKDIR /tmp
@@ -31,11 +30,11 @@ ENV KEYCLOACK=$keycloadk_url
 ENV MONGODB_URI=$mongodb_url
 ENV REDIS=$redis_url
 ENV LOGSTASH=$logstash_url
-RUN mvn package
-FROM openjdk:11
+RUN mvn package -DskipTests
+FROM openjdk:17
 COPY --from=builder /tmp/target/transaction_listener-0.0.1-SNAPSHOT.jar /tmp/
 COPY target/classes/logback-spring.xml /config/
 #EXPOSE 8090
 
-ENV JAVA_OPTS="-Xmx128m -Xms128m -XshowSettings:vm -XX:MetaspaceSize=48m -XX:+UseG1GC -XX:+UnlockExperimentalVMOptions -XX:+UseContainerSupport -Dlogging.config=file:/config/logback-local.xml"
+ENV JAVA_OPTS="-Xmx128m -Xms128m -XshowSettings:vm -XX:MetaspaceSize=48m -XX:+UseG1GC -XX:+UnlockExperimentalVMOptions -XX:+UseContainerSupport -Dlogging.config=file:/config/logback-spring.xml"
 ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar /tmp/transaction_listener-0.0.1-SNAPSHOT.jar" ]

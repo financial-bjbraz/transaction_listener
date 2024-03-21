@@ -1,4 +1,4 @@
-version: '1'
+version: '3'
 
 services:
   listener-rootstock:
@@ -6,8 +6,8 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    ports:
-      - "8090:8090"
+    #ports:
+    #  - "8090:8090"
     #    links:
     #      - "db:redis"
     #  db:
